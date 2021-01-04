@@ -1,0 +1,147 @@
+.App {
+  text-align: left;
+}
+
+/*RegisterComponent*/
+.Register {
+  text-align: center;
+}
+
+.Register > div {
+  margin-bottom: 4px;
+}
+
+.Register > div > .TextField {
+  width: 400px;
+}
+
+/*LoginComponent*/
+.Login {
+  text-align: center;
+}
+
+.Login > div {
+  margin-bottom: 4px;
+}
+
+.Login > div > .TextField {
+  width: 400px;
+}
+
+/*FrontpageComponent*/
+.Frontpage {
+  text-align: center;
+}
+
+.Frontpage > div {
+  margin-bottom: 4px;
+}
+
+/*JWTFrontpageComponent*/
+.JWTFrontpage {
+  display: flex;
+  flex-direction: column;
+}
+
+.JWTFrontpage > div  {
+  margin-bottom: 4px;
+}
+
+.Frontpage-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.Button {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.Frontpage-content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+/*ProfileComponent*/
+.Profile {
+  display: flex;
+  flex-direction: column;
+}
+
+.Profile > div  {
+  margin-bottom: 4px;
+}
+
+.Profile-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.Button {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.Profile-content {
+  display: flex;
+  
+  flex-direction: row;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.Profile-content2 {
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+  margin-left: 8px;
+  margin-top: 6px;
+}
+
+/*RoomComponent*/
+
+.Room-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.Room-sidebar {
+  background-color: rgb(243, 229, 255);
+  min-height: 100vh
+}
+
+.Room-sidebar > div {
+  margin:8px;
+}
+.Room-sidebar > div > form > div {
+  margin-bottom:8px;
+}
+
+.Room-content > div {
+  margin:8px;
+}
+
+.Room-toolbar {
+  display: flex;
+  flex-direction: row;
+}
+
+.Room-toolbar > div {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.Room-Canvas {
+  background-color: black;
+}
+.Room-Canvas > div {
+  padding: 4px;
+}
