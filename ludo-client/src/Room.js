@@ -42,17 +42,25 @@ function Room(props) {
     });
     const [word,setWord] = useState("");
     const [somebodywon,setSomebodywon] = useState(false);
-    const canvasEl = useRef(null);
+    const gameboard = useRef(null);
+    const gamespawn0 = useRef(null);
+    const gamehome0 = useRef(null);
+    const gamespawn1 = useRef(null);
+    const gamehome1 = useRef(null);
+    const gamespawn2 = useRef(null);
+    const gamehome2 = useRef(null);
+    const gamespawn3 = useRef(null);
+    const gamehome3 = useRef(null);
     const [isCanvasEnabled,setIsCanvasEnabled] = useState(false);
 
     const sendCanvasData = () => {
-        if(isCanvasEnabled){
-            let canvasData = canvasEl.current?.getSaveData();
-            props.socketauth.emit('canvasData', {canvasSaveData:canvasData, roomid:window.location.pathname.substr(6)}, (resp) => {
+        //if(isCanvasEnabled){
+        //    let canvasData = canvasEl.current?.getSaveData();
+        //    props.socketauth.emit('canvasData', {canvasSaveData:canvasData, roomid:window.location.pathname.substr(6)}, (resp) => {
                 //console.log(resp);
                 //setRoomlist(resp);
-          });
-        }
+        //  });
+       // }
     }
 
     const handleMessageInput = (event) => {
@@ -71,11 +79,11 @@ function Room(props) {
         //get word and timer info for non drawing clients
         props.socketauth.on('clientdrawdata', data => {
             //nastavi word
-            setWord("guess it.");
-            setIsCanvasEnabled(false);
-            canvasEl.current?.clear();
+          //  setWord("guess it.");
+          //  setIsCanvasEnabled(false);
+           // canvasEl.current?.clear();
             //start timer
-            start();
+         //   start();
         });
 
         //time is up for guessing
@@ -90,9 +98,9 @@ function Room(props) {
             console.log(data);
         });
 
-        props.socketauth.on('getSavedCanvasData', data => {
-            canvasEl.current?.loadSaveData(data.canvasSaveData,true);
-        });
+       // props.socketauth.on('getSavedCanvasData', data => {
+           // canvasEl.current?.loadSaveData(data.canvasSaveData,true);
+       // });
 
     },[props.socketauth]);
 
@@ -106,6 +114,11 @@ function Room(props) {
         }
       }
 
+    const handleDiceThrowClick = (event,roomid) => {
+       event.preventDefault();
+       alert(gameboard.current?.children.length);
+    }
+
     const handleRoomLeaveClick = (event,roomid) => {
         props.socketauth.emit('leaveroom', {roomid: roomid}, (resp) => {
             history.push("/");
@@ -117,10 +130,10 @@ function Room(props) {
         props.socketauth.emit('startdrawing', {roomid: roomid}, (resp) => {
             if(resp !== null){
                 //zacni odstevati 3 min
-                start();
-                canvasEl.current?.clear();
-                setIsCanvasEnabled(true);
-                setWord(resp.word);
+            //    start();
+           //     canvasEl.current?.clear();
+           //     setIsCanvasEnabled(true);
+            //    setWord(resp.word);
             }else{
                 alert("not your turn to draw.");
             }
@@ -170,15 +183,13 @@ function Room(props) {
             </div>
             <div className="Room-content">
                 <div className="Room-toolbar">
-                    <div>
-                    <Paper elevation={2}>
-                <h3 style={{padding:"6px"}} >Word: {word}</h3>
-                    </Paper>
+                    <div style={{paddingTop:"20px"}}>
+                        <Button onClick={(event) => handleDiceThrowClick(event,window.location.pathname.substr(6))} variant="contained" type='submit' color="primary">
+                            Met kocke
+                        </Button>
                     </div>
                     <div>
-                    <Paper elevation={2}>
-                <h3 style={{padding:"6px"}}>Time: {timeLeft/1000}</h3>
-                    </Paper>
+                    
                     </div>
                     <div style={{paddingTop:"20px"}}>
                             <Button onClick={(event) => handleRoomLeaveClick(event,window.location.pathname.substr(6))} variant="contained" type='submit' color="primary">
@@ -187,13 +198,164 @@ function Room(props) {
                     </div>
                     <div style={{paddingTop:"20px"}}>
                             <Button onClick={(event) => handleRoomStartdrawingClick(event,window.location.pathname.substr(6))} variant="contained" type='submit' color="primary">
-                                    Start drawing
+                                    Start game
                             </Button>
                     </div>
                 </div>
-                <div className="Room-Canvas">
-                    <div>
-                    <CanvasDraw onChange={sendCanvasData} disabled={!isCanvasEnabled} ref={canvasEl} hideGrid={true} canvasWidth={600} canvasHeight={600}/>
+                <div className="Room-spawnarea">
+                    <div ref={gamespawn0} className="Room-Gamespawn spawn0">
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                    </div>
+                    <div ref={gamespawn1} className="Room-Gamespawn spawn1">
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                    </div>
+                    <div ref={gamespawn2} className="Room-Gamespawn spawn2">
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                    </div>
+                    <div ref={gamespawn3} className="Room-Gamespawn spawn3">
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                        <div className="box">
+                        </div>
+                    </div>
+                </div>
+                <div ref={gameboard} className="Room-Gameboard">
+                    <div className="box boxtop0">
+                    </div>
+                    <div className="box boxtop1">
+                    </div>
+                    <div className="box boxtop2">
+                    </div>
+                    <div className="box boxtop3">
+                    </div>
+                    <div className="box boxtop4">
+                    </div>
+                    <div className="box boxtop5">
+                    </div>
+                    <div className="box boxtop6">
+                    </div>
+                    <div className="box boxtop7">
+                    </div>
+                    <div className="box boxtop8">
+                    </div>
+                    <div className="box boxtop9">
+                    </div>
+                    <div className="box boxright0">
+                    </div>
+                    <div className="box boxright1">
+                    </div>
+                    <div className="box boxright2">
+                    </div>
+                    <div className="box boxright3">
+                    </div>
+                    <div className="box boxright4" onClick={(event) => handleDiceThrowClick(event,window.location.pathname.substr(6))}>
+                    </div>
+                    <div className="box boxright5">
+                    </div>
+                    <div className="box boxright6">
+                    </div>
+                    <div className="box boxright7">
+                    </div>
+                    <div className="box boxright8">
+                    </div>
+                    <div className="box boxright9">
+                    </div>
+                    <div className="box boxbottom0">
+                    </div>
+                    <div className="box boxbottom1">
+                    </div>
+                    <div className="box boxbottom2">
+                    </div>
+                    <div className="box boxbottom3">
+                    </div>
+                    <div className="box boxbottom4">
+                    </div>
+                    <div className="box boxbottom5">
+                    </div>
+                    <div className="box boxbottom6">
+                    </div>
+                    <div className="box boxbottom7">
+                    </div>
+                    <div className="box boxbottom8">
+                    </div>
+                    <div className="box boxbottom9">
+                    </div>
+                    <div className="box boxleft0">
+                    </div>
+                    <div className="box boxleft1">
+                    </div>
+                    <div className="box boxleft2">
+                    </div>
+                    <div className="box boxleft3">
+                    </div>
+                    <div className="box boxleft4">
+                    </div>
+                    <div className="box boxleft5">
+                    </div>
+                    <div className="box boxleft6">
+                    </div>
+                    <div className="box boxleft7">
+                    </div>
+                    <div className="box boxleft8">
+                    </div>
+                    <div className="box boxleft9">
+                    </div>
+                    <div className="home0 home00">
+                    </div>
+                    <div className="home0 home01">
+                    </div>
+                    <div className="home0 home02">
+                    </div>
+                    <div className="home0 home03">
+                    </div>
+                    <div className="home1 home10">
+                    </div>
+                    <div className="home1 home11">
+                    </div>
+                    <div className="home1 home12">
+                    </div>
+                    <div className="home1 home13">
+                    </div>
+                    <div className="home2 home20">
+                    </div>
+                    <div className="home2 home21">
+                    </div>
+                    <div className="home2 home22">
+                    </div>
+                    <div className="home2 home23">
+                    </div>
+                    <div className="home3 home30">
+                    </div>
+                    <div className="home3 home31">
+                    </div>
+                    <div className="home3 home32">
+                    </div>
+                    <div className="home3 home33">
                     </div>
                 </div>
             </div>

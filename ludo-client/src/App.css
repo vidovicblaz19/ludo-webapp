@@ -145,3 +145,125 @@
 .Room-Canvas > div {
   padding: 4px;
 }
+
+/* Room gameboard */
+
+.box {
+  background-color: #d9d9d9;
+  border: 2px solid black;
+ }
+
+ .home0 {
+  background-color: blue;
+  border: 2px solid black;
+ }
+
+ .home1 {
+  background-color: red;
+  border: 2px solid black;
+ }
+ .home2 {
+  background-color: yellow;
+  border: 2px solid black;
+ }
+ .home3 {
+  background-color: green;
+  border: 2px solid black;
+ }
+
+ .boxtop0 { grid-area: boxtop0; }
+ .boxtop1 { grid-area: boxtop1; }
+ .boxtop2 { grid-area: boxtop2; }
+ .boxtop3 { grid-area: boxtop3; }
+ .boxtop4 { grid-area: boxtop4; }
+ .boxtop5 { grid-area: boxtop5; }
+ .boxtop6 { grid-area: boxtop6; }
+ .boxtop7 { grid-area: boxtop7; }
+ .boxtop8 { grid-area: boxtop8; }
+ .boxtop9 { grid-area: boxtop9; }
+
+ .boxright0 { grid-area: boxright0; }
+ .boxright1 { grid-area: boxright1; }
+ .boxright2 { grid-area: boxright2; }
+ .boxright3 { grid-area: boxright3; }
+ .boxright4 { grid-area: boxright4; }
+ .boxright5 { grid-area: boxright5; }
+ .boxright6 { grid-area: boxright6; }
+ .boxright7 { grid-area: boxright7; }
+ .boxright8 { grid-area: boxright8; }
+ .boxright9 { grid-area: boxright9; }
+
+ .boxbottom0 { grid-area: boxbottom0; }
+ .boxbottom1 { grid-area: boxbottom1; }
+ .boxbottom2 { grid-area: boxbottom2; }
+ .boxbottom3 { grid-area: boxbottom3; }
+ .boxbottom4 { grid-area: boxbottom4; }
+ .boxbottom5 { grid-area: boxbottom5; }
+ .boxbottom6 { grid-area: boxbottom6; }
+ .boxbottom7 { grid-area: boxbottom7; }
+ .boxbottom8 { grid-area: boxbottom8; }
+ .boxbottom9 { grid-area: boxbottom9; }
+
+ .boxleft0 { grid-area: boxleft0; }
+ .boxleft1 { grid-area: boxleft1; }
+ .boxleft2 { grid-area: boxleft2; }
+ .boxleft3 { grid-area: boxleft3; }
+ .boxleft4 { grid-area: boxleft4; }
+ .boxleft5 { grid-area: boxleft5; }
+ .boxleft6 { grid-area: boxleft6; }
+ .boxleft7 { grid-area: boxleft7; }
+ .boxleft8 { grid-area: boxleft8; }
+ .boxleft9 { grid-area: boxleft9; }
+
+ .home00 { grid-area: home00; }
+ .home01 { grid-area: home01; }
+ .home02 { grid-area: home02; }
+ .home03 { grid-area: home03; }
+
+ .home10 { grid-area: home10; }
+ .home11 { grid-area: home11; }
+ .home12 { grid-area: home12; }
+ .home13 { grid-area: home13; }
+
+ .home20 { grid-area: home20; }
+ .home21 { grid-area: home21; }
+ .home22 { grid-area: home22; }
+ .home23 { grid-area: home23; }
+
+ .home30 { grid-area: home30; }
+ .home31 { grid-area: home31; }
+ .home32 { grid-area: home32; }
+ .home33 { grid-area: home33; }
+
+.Room-Gameboard{
+  display: grid;
+  grid-template-columns: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px; 
+  grid-template-rows: 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px 50px; 
+  grid-template-areas: "boxtop0 boxtop1 boxtop2 boxtop3 boxtop4 boxtop5 boxtop6 boxtop7 boxtop8 boxtop9 boxright0"
+                       "boxleft9 home00 home01 home02 home03 . . . . home10 boxright1"
+                       "boxleft8 . . . . . . . . home11 boxright2"
+                       "boxleft7 . . . . . . . . home12 boxright3"
+                       "boxleft6 . . . . . . . . home13 boxright4"
+                       "boxleft5 . . . . . . . . . boxright5"
+                       "boxleft4 home33 . . . . . . . . boxright6"
+                       "boxleft3 home32 . . . . . . . . boxright7"
+                       "boxleft2 home31 . . . . . . . . boxright8"
+                       "boxleft1 home30 . . . . home23 home22 home21 home20 boxright9"
+                       "boxleft0 boxbottom9 boxbottom8 boxbottom7 boxbottom6 boxbottom5 boxbottom4 boxbottom3 boxbottom2 boxbottom1 boxbottom0";
+  justify-content: center;
+}
+
+.Room-Gamespawn{
+  display: grid;
+  grid-template-columns: 50px 50px ; 
+  grid-template-rows: 50px 50px ; 
+  justify-content: center;
+  margin: 8px;
+}
+
+.Room-spawnarea{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  
+}
