@@ -151,23 +151,26 @@
 .box {
   background-color: #d9d9d9;
   border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
  }
 
  .home0 {
-  background-color: blue;
+  background-color: rgb(120, 120, 255);
   border: 2px solid black;
  }
 
  .home1 {
-  background-color: red;
+  background-color: rgb(255, 120, 120);
   border: 2px solid black;
  }
  .home2 {
-  background-color: yellow;
+  background-color: rgb(255, 255, 120);
   border: 2px solid black;
  }
  .home3 {
-  background-color: green;
+  background-color: rgb(120, 128, 120);
   border: 2px solid black;
  }
 
@@ -259,6 +262,7 @@
   grid-template-rows: 50px 50px ; 
   justify-content: center;
   margin: 8px;
+  align-content: center;
 }
 
 .Room-spawnarea{
@@ -266,4 +270,40 @@
   flex-direction: row;
   justify-content: center;
   
+}
+
+.gamepiece-blue {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 40px solid blue;
+}
+
+.gamepiece-red {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 40px solid red;
+}
+
+.gamepiece-yellow {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 40px solid yellow;
+}
+
+.gamepiece-green {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 40px solid green;
+}
+
+.hide > div {
+  display:none;
 }
