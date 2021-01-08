@@ -54,57 +54,57 @@ const getPlayerIndexByName = (roomid,decoded) => {
     return index2;
 }
 
+const initLudoObj = (color,index) => {
+    let className;
+     //if blue
+    if(color === 0){ className = "gamepiece-blue"; }
+    //if red
+    else if(color === 1){ className = "gamepiece-red"; }
+    //if yellow
+    else if(color === 2){ className = "gamepiece-yellow";  }
+    //if green
+    else if(color === 3){ className = "gamepiece-green";  }
+
+    let tmp = {
+        active: false,
+        color: color,
+        index: index,
+        className:className,
+    };
+    return tmp;
+}
+
+const initLudoObjField = () => {
+    let tmp = {
+        active: false,
+        color: 5,
+        index: -1,
+        className:'none',
+    };
+    return tmp;
+}
+
 const createRoom = () => {
-    /*
-    var Sockets = [];
-    let tmpsocket = {
-        username:"",
-        points:0
-    }
-
-
-    for (const [_, socket] of connectedsockets) {
-        console.log(socket.username);
-    }
-    */
-
     rooms.push({ 
         _id: roomcounter,
         name: "room"+roomcounter,
         sockets: [],
-        word:"",
-        timestamp:0,
-        nrofplayersguessed:0,
-        indexsocketdrawing:0,
+        indexsocketturn:0,
+        socketturnstage:0,
+        gameactive:false,
+        spawn0:[initLudoObj(0,0),initLudoObj(0,1),initLudoObj(0,2),initLudoObj(0,3)],
+        spawn1:[initLudoObj(1,0),initLudoObj(1,1),initLudoObj(1,2),initLudoObj(1,3)],
+        spawn2:[initLudoObj(2,0),initLudoObj(2,1),initLudoObj(2,2),initLudoObj(2,3)],
+        spawn3:[initLudoObj(3,0),initLudoObj(3,1),initLudoObj(3,2),initLudoObj(3,3)],
+        field:[initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField(),initLudoObjField()],
+        safe0:[initLudoObj(0,0),initLudoObj(0,1),initLudoObj(0,2),initLudoObj(0,3)],
+        safe1:[initLudoObj(1,0),initLudoObj(1,1),initLudoObj(1,2),initLudoObj(1,3)],
+        safe2:[initLudoObj(2,0),initLudoObj(2,1),initLudoObj(2,2),initLudoObj(2,3)],
+        safe3:[initLudoObj(3,0),initLudoObj(3,1),initLudoObj(3,2),initLudoObj(3,3)],
+        currDiceRoll:0,
     });
     roomcounter++;
 }
-
-var dst;
-
-const drawingstarttimer = (roomid) => {
-    dst = setTimeout(() =>{
-
-    //po koncanem timerju prestavim igralca na naslednjega
-    let numOfPlayers = rooms[getRoomIndexByID(roomid)].sockets.length;
-    if(rooms[getRoomIndexByID(roomid)].indexsocketdrawing + 1 < numOfPlayers) {
-        rooms[getRoomIndexByID(roomid)].indexsocketdrawing = rooms[getRoomIndexByID(roomid)].indexsocketdrawing + 1;
-    }else{
-        rooms[getRoomIndexByID(roomid)].indexsocketdrawing = 0;
-    }
-
-    rooms[getRoomIndexByID(roomid)].word = "";
-    rooms[getRoomIndexByID(roomid)].nrofplayersguessed = 0;
-
-    authio.to('room'+roomid).emit('gamestopguess_by_server', rooms[getRoomIndexByID(roomid)]);
-
- }, 180000); 
-}
-
-const drawingstoptimer = () => {
-    clearTimeout(dst);
-}
-
 
 //socketom nastavi poinsts na 0 ko se joinajo v room
 
@@ -152,24 +152,6 @@ const authio = io.of('/auth');
             console.log('A user disconnected');
         });
 
-        //console.log(socket.username);
-        //var connectedClients = authio.sockets;
-        //console.log(connectedClients);
-
-        //to loop through sockets
-        // loop through all sockets
-        //for (const [_, socket] of authio.sockets) {
-            // ...
-        //    console.log(socket.username);
-
-        //}
-
-        //for (const [_, socket] of authio.sockets) {
-            // ...
-        //    console.log(socket.username);
-
-        //}
-
         //handleProfile
         socket.on("profile", (req, resp) => {
             usercontroller.show(socket,resp);
@@ -186,10 +168,6 @@ const authio = io.of('/auth');
                 let tmpPlayer = {
                     _id:socket._id,
                     username:socket.username,
-                    points:0,
-                    isDrawing:false,
-                    hasGuessed:false,
-                    haswon:false,
                 }
                 
                 socket.join("room"+req.roomid);
@@ -221,98 +199,261 @@ const authio = io.of('/auth');
             
             //sends data to separate rooms to know which players are in that room
             rooms.forEach((room) => {
-                //TODO check if game is over in any of the rooms then send that update also
-                //in that room update everyones database entry and announce winner.
-                room.sockets.forEach((player) => {
-                    if(player.points >= 300){
-                        player.haswon = true;
-                        room.sockets.forEach((player2) => {
-                            usercontroller.update(player2,()=>{});
-                            player2.haswon = false;
-                            player2.hasGuessed = false;
-                            player2.points = 0;
-                        });
-
-                        authio.to('room'+room._id).emit('room_gameover_by_server', {winner:player.username});
-                        
-                    }
-                });
-
                 authio.to('room'+room._id).emit('room_update_by_server', room);
             });
 
-        }, 2000);
+        }, 500);
 
         //recieve message
         socket.on("message", (req, resp) => {
-
-            let points = 180;
-            if(req.message === rooms[getRoomIndexByID(req.roomid)].word){
-                //drawingstoptimer();
-                rooms[getRoomIndexByID(req.roomid)].nrofplayersguessed +=1;
-                rooms[getRoomIndexByID(req.roomid)].sockets[getPlayerIndexByName(req.roomid,socket)].points += points - Math.floor((Date.now() - rooms[getRoomIndexByID(req.roomid)].timestamp)/1000);
-                
-                authio.to("room"+req.roomid).emit("userMessage",{username:socket.username,message:"guessed right."});
-
-                //check if everyone guessed
-                if(rooms[getRoomIndexByID(req.roomid)].nrofplayersguessed === rooms[getRoomIndexByID(req.roomid)].sockets.length-1){
-                    drawingstoptimer();
-                    //po koncanem ugibanju prestavim igralca na naslednjega
-                    let numOfPlayers = rooms[getRoomIndexByID(req.roomid)].sockets.length;
-                    if(rooms[getRoomIndexByID(req.roomid)].indexsocketdrawing + 1 < numOfPlayers) {
-                        rooms[getRoomIndexByID(req.roomid)].indexsocketdrawing = rooms[getRoomIndexByID(req.roomid)].indexsocketdrawing + 1;
-                    }else{
-                        rooms[getRoomIndexByID(req.roomid)].indexsocketdrawing = 0;
-                    }
-
-                    rooms[getRoomIndexByID(req.roomid)].word = "";
-                    rooms[getRoomIndexByID(req.roomid)].nrofplayersguessed = 0;
-
-                    authio.to('room'+req.roomid).emit('gamestopguess_by_server', rooms[getRoomIndexByID(req.roomid)]);
-                }
-
-            }else{
-                authio.to("room"+req.roomid).emit("userMessage",{username:socket.username,message:req.message});
-            }
+            authio.to("room"+req.roomid).emit("userMessage",{username:socket.username,message:req.message});
             resp("message emitted succesfully.");
-
         });
 
-        //var drawingstoptimer;
-
-        //get word and start drawing
-        socket.on("startdrawing", (req, resp) => {
+        //start game
+        socket.on("startgame", (req, resp) => {
             let index = getPlayerIndexByName(req.roomid,socket);
 
-            if(index === rooms[getRoomIndexByID(req.roomid)].indexsocketdrawing){
-            
-                //rooms[getRoomIndexByID(req.roomid)]
-                let tmpword = possibleWords[Math.floor(Math.random() * 7)];
-                rooms[getRoomIndexByID(req.roomid)].word = tmpword;
-                rooms[getRoomIndexByID(req.roomid)].timestamp = Date.now();
+            if(index === rooms[getRoomIndexByID(req.roomid)].indexsocketturn){
+                //give players gamepieces
+                startingGamePieces(rooms[getRoomIndexByID(req.roomid)]);
 
-                socket.to("room"+req.roomid).emit("clientdrawdata",{});
-
-                drawingstarttimer(req.roomid);
-
-                resp({
-                    word:tmpword,
-                });
-
+                resp(rooms[getRoomIndexByID(req.roomid)]);
             }else{
                 resp(null);
             }
         });
 
-        //receive canvas data from socket that is drawing
-        socket.on("canvasData", (req, resp) => {
-            socket.to("room"+req.roomid).emit("getSavedCanvasData",{canvasSaveData:req.canvasSaveData});
+        //throw dice
+        socket.on("throwdice", (req, resp) => {
+            let index = getPlayerIndexByName(req.roomid,socket);
+            let room = rooms[getRoomIndexByID(req.roomid)];
 
-            resp("message emitted succesfully.");
+            if(index === room.indexsocketturn){
+                if(room.socketturnstage === 0){
+                    room.currDiceRoll = Math.floor((Math.random() * 6) + 1);
+                    room.socketturnstage = 1;
+                    //if every gamepiece is in spawn
+                    let piecesinspawn = 0;
+                    if(room.indexsocketturn === 0){
+                        room.spawn0.forEach((spawnpiece) => {
+                            if(spawnpiece.active){piecesinspawn++;}
+                        });
+                    }else if(room.indexsocketturn === 1){
+                        room.spawn1.forEach((spawnpiece) => {
+                            if(spawnpiece.active){piecesinspawn++;}
+                        });
+                    }else if(room.indexsocketturn === 2){
+                        room.spawn2.forEach((spawnpiece) => {
+                            if(spawnpiece.active){piecesinspawn++;}
+                        });
+                    }else if(room.indexsocketturn === 3){
+                        room.spawn3.forEach((spawnpiece) => {
+                            if(spawnpiece.active){piecesinspawn++;}
+                        });
+                    }
+                    //if all pieces in spawn go to next person
+                    if(piecesinspawn === 4 && room.currDiceRoll !== 6){
+                        room.socketturnstage = 0;
+                        nextplayer(room);
+                    }
+                }
+
+                resp(room);
+            }else{
+                resp(null);
+            }
+        });
+
+        //move from spawn
+        socket.on("spawnmove", (req, resp) => {
+            let color = req.color;
+            let spawnindex = req.index;
+            
+            let index = getPlayerIndexByName(req.roomid,socket);
+            let room = rooms[getRoomIndexByID(req.roomid)];
+
+            //check if clicked on field with a gamepiece
+            let haspiece = false;
+            if(color === 0){
+                if(room.spawn0[spawnindex].active) haspiece=true; 
+            }else if(color === 1){
+                if(room.spawn1[spawnindex].active) haspiece=true; 
+            }else if(color === 2){
+                if(room.spawn2[spawnindex].active) haspiece=true; 
+            }else if(color === 3){
+                if(room.spawn3[spawnindex].active) haspiece=true; 
+            }
+
+            if(index === room.indexsocketturn && index === color && room.currDiceRoll === 6 && haspiece){
+                if(room.socketturnstage === 1){
+                    //clicked game piece remove from spawn,
+                    spawnMoveOut(room,color,spawnindex);
+                    room.socketturnstage = 0;
+                    nextplayer(room);
+                }
+
+                resp(room);
+            }else{
+                resp(null);
+            }
+            
+        });
+
+        //move piece on the field
+        socket.on("fieldmove", (req, resp) => {
+            let fieldindex = req.index;
+            
+            let index = getPlayerIndexByName(req.roomid,socket);
+            let room = rooms[getRoomIndexByID(req.roomid)];
+
+            //check if clicked on field with a gamepiece
+            let haspiece = false;
+            if(room.field[fieldindex].active) haspiece=true; 
+
+            if(index === room.indexsocketturn && index === room.field[fieldindex].color && haspiece){
+                if(room.socketturnstage === 1){
+                    //clicked game piece move forward on the field,
+                    movePieceOnField(room,fieldindex);
+                    room.socketturnstage = 0;
+                    nextplayer(room);
+                }
+
+                resp(room);
+            }else{
+                resp(null);
+            }
+            
         });
 
     });
 
+const nextplayer = (room) => {
+    let tmp = room.indexsocketturn + 1;
+    room.indexsocketturn = tmp % room.sockets.length;
+}
+
+const movePieceOnField = (room,index) => {
+
+    let moveaction = (index+room.currDiceRoll)%40;
+    
+    //if field has a piece on it, it gets thrown back to the spawn
+    if(room.field[moveaction].active){
+        if(room.field[moveaction].color === 0){
+            room.spawn0[room.field[moveaction].index].active = true;
+        }else if(room.field[moveaction].color === 1){
+            room.spawn1[room.field[moveaction].index].active = true;
+        }else if(room.field[moveaction].color === 2){
+            room.spawn2[room.field[moveaction].index].active = true;
+        }else if(room.field[moveaction].color === 3){
+            room.spawn3[room.field[moveaction].index].active = true;
+        }
+    }
+
+    //check if we can go in safehouse
+    let safehouseIndex = 0;
+    let goToSafeHouse = false;
+    if(room.field[index].color === 0){
+        if(index+room.currDiceRoll > 39 && index <= 39){
+            safehouseIndex = room.currDiceRoll + index - 39 - 1;
+            goToSafeHouse = true;
+            room.safe0[safehouseIndex] = Object.assign({}, room.field[index]);
+            room.field[index].active = false;
+        }
+    }else if(room.field[index].color === 1){
+        if(index+room.currDiceRoll > 9 && index <= 9){
+            safehouseIndex = room.currDiceRoll + index - 9 - 1;
+            goToSafeHouse = true;
+            room.safe1[safehouseIndex] = Object.assign({}, room.field[index]);
+            room.field[index].active = false;
+        }
+    }else if(room.field[index].color === 2){
+        if(index+room.currDiceRoll > 19 && index <= 19){
+            safehouseIndex = room.currDiceRoll + index - 19 - 1;
+            goToSafeHouse = true;
+            room.safe2[safehouseIndex] = Object.assign({}, room.field[index]);
+            room.field[index].active = false;
+        }
+    }else if(room.field[index].color === 3){
+        if(index+room.currDiceRoll > 29 && index <= 29){
+            safehouseIndex = room.currDiceRoll + index - 29 - 1;
+            goToSafeHouse = true;
+            room.safe3[safehouseIndex] = Object.assign({}, room.field[index]);
+            room.field[index].active = false;
+        }
+    }
+
+    //else move gamepiece forward
+    if(!goToSafeHouse){
+        room.field[moveaction] = Object.assign({}, room.field[index]);
+        room.field[index].active = false;
+    }
+}
+
+const spawnMoveOut = (room,color,index) => {
+
+    if(room.currDiceRoll === 6){
+        let coloroffset = color * 10;
+        //if field has a piece on it, it gets thrown back to the spawn
+        if(room.field[coloroffset].active){
+            if(room.field[coloroffset].color === 0){
+                room.spawn0[room.field[coloroffset].index].active = true;
+            }else if(room.field[coloroffset].color === 1){
+                room.spawn1[room.field[coloroffset].index].active = true;
+            }else if(room.field[coloroffset].color === 2){
+                room.spawn2[room.field[coloroffset].index].active = true;
+            }else if(room.field[coloroffset].color === 3){
+                room.spawn3[room.field[coloroffset].index].active = true;
+            }
+        }
+
+        //moves gamepiece to the gameboard, then removes gamepiece from spawn
+        if(color === 0){
+            room.field[coloroffset] = Object.assign({}, room.spawn0[index]);
+            room.spawn0[index].active = false;
+        }else if(color === 1){
+            room.field[coloroffset] = Object.assign({}, room.spawn1[index]);
+            room.spawn1[index].active = false;
+        }else if(color === 2){
+            room.field[coloroffset] = Object.assign({}, room.spawn2[index]);
+            room.spawn2[index].active = false;
+        }else if(color === 3){
+            room.field[coloroffset] = Object.assign({}, room.spawn3[index]);
+            room.spawn3[index].active = false;
+        }
+    }
+}
+
+
+const startingGamePieces = (room) => {
+    if(!room.gameactive){
+        //if blue
+        if(room.sockets.length >= 1){
+            room.spawn0.forEach((gamepiece) => {
+                gamepiece.active = true;
+            });
+        }
+        //if red
+        if(room.sockets.length >= 2){
+            room.spawn1.forEach((gamepiece) => {
+                gamepiece.active = true;
+            });
+        }
+        //if yellow
+        if(room.sockets.length >= 3){
+            room.spawn2.forEach((gamepiece) => {
+                gamepiece.active = true;
+            });
+        }
+        //if green
+        if(room.sockets.length === 4){
+            room.spawn3.forEach((gamepiece) => {
+                gamepiece.active = true;
+            });
+        }
+        room.gameactive = true;
+    }
+}
 
 
 app.use(logger('dev'));

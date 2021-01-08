@@ -79,7 +79,7 @@ function JWTFrontpage(props) {
               <ListItemIcon><MeetingRoomIcon/></ListItemIcon>
               <ListItemText primary={item.name} secondary={players+""}  />
               <ListItemSecondaryAction>
-                <ListItemText edge="end" primary={item.sockets.length+"/8"} />
+                <ListItemText edge="end" primary={item.sockets.length+"/4"} />
               </ListItemSecondaryAction>
             </ListItem>
           );

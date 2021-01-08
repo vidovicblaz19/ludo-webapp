@@ -159,19 +159,31 @@
  .home0 {
   background-color: rgb(120, 120, 255);
   border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
  }
 
  .home1 {
   background-color: rgb(255, 120, 120);
   border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
  }
  .home2 {
   background-color: rgb(255, 255, 120);
   border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
  }
  .home3 {
   background-color: rgb(120, 128, 120);
   border: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
  }
 
  .boxtop0 { grid-area: boxtop0; }
