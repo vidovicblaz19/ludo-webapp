@@ -8,7 +8,11 @@ function Profile(props) {
         username:"",
         nrofgames:0,
         wins:0,
-        totalpoints:0,
+        nrofgames : 0,
+			  wins : 0,
+        secondplace : 0,
+        thirdplace : 0,
+        fourthplace : 0
     });
   
   const handleGetProfileData = (props) => {
@@ -41,7 +45,9 @@ function Profile(props) {
             <p>username: {response.username}</p>
             <p>number of games played: {response.nrofgames}</p>
             <p>wins: {response.wins}</p>
-            <p>total points: {response.totalpoints}</p>
+            <p>second places: {response.secondplace}</p>
+            <p>third places: {response.thirdplace}</p>
+            <p>fourth places: {response.fourthplace}</p>
         </div>
       </div>
     </div>

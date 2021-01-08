@@ -7,7 +7,9 @@ var userSchema = new Schema({
 	'password' : String,
 	'nrofgames' : Number,
 	'wins' : Number,
-	'totalpoints' : Number
+	'secondplace' : Number,
+	'thirdplace' : Number,
+	'fourthplace' : Number
 });
 
 //authenticate input against database

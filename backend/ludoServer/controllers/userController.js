@@ -54,8 +54,9 @@ module.exports = {
 			password : req.password,
 			nrofgames : 0,
 			wins : 0,
-			totalpoints : 0
-
+            secondplace : 0,
+            thirdplace : 0,
+            fourthplace : 0
         });
 
         user.save(function (err, user) {
@@ -114,7 +115,9 @@ module.exports = {
             if(haswon){
             user.wins += 1;
             }
-			user.totalpoints += points;
+			user.secondplace = user.secondplace + 1;
+            user.thirdplace = user.thirdplace + 1;
+            user.fourthplace = user.thirdplace + 1;
 			
             user.save(function (err, user) {
                 if (err) {
